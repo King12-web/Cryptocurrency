@@ -1,0 +1,360 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root{
+    --bg:#050816;
+    --card:rgba(255,255,255,.05);
+    --border:rgba(255,255,255,.1);
+    --primary:#38bdf8;
+    --secondary:#8b5cf6;
+    --text:#ffffff;
+    --text-secondary:#94a3b8;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+    min-height:100vh;
+    position:relative;
+}
+
+/* =========================
+   BACKGROUND GLOW
+========================= */
+
+body::before{
+    content:"";
+    position:fixed;
+    top:-150px;
+    right:-150px;
+
+    width:500px;
+    height:500px;
+
+    background:radial-gradient(
+        circle,
+        rgba(56,189,248,.4),
+        transparent 70%
+    );
+
+    filter:blur(80px);
+    z-index:-3;
+}
+
+/* =========================
+   MOON
+========================= */
+
+body::after{
+    content:"";
+    position:fixed;
+
+    top:120px;
+    right:8%;
+
+    width:320px;
+    height:320px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(
+        circle at 30% 30%,
+        #ffffff,
+        #dbeafe,
+        #94a3b8
+    );
+
+    box-shadow:
+        0 0 40px #38bdf8,
+        0 0 80px #38bdf8,
+        0 0 120px #38bdf8;
+
+    z-index:-2;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+    padding:20px 8%;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:18px 35px;
+
+    background:var(--card);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+}
+
+.logo img{
+    display:block;
+    max-width:100%;
+    /* height:auto; */
+}
+
+/* =========================
+   NAV LINKS
+========================= */
+
+.nav-links{
+    list-style:none;
+    display:flex;
+    gap:35px;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:var(--text);
+    font-weight:500;
+    transition:.3s ease;
+}
+
+.nav-links a:hover{
+    color:var(--primary);
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.signup-btn{
+    padding:12px 25px;
+
+    border:none;
+    border-radius:12px;
+
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+    color:white;
+    font-weight:600;
+
+    cursor:pointer;
+    transition:.3s ease;
+}
+
+.signup-btn:hover{
+    transform:translateY(-3px);
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.hero{
+    min-height:85vh;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 8%;
+
+    position:relative;
+}
+
+/* =========================
+   CRYPTO CHART
+========================= */
+
+.hero::before{
+    content:"";
+
+    position:absolute;
+    left:0;
+    bottom:0;
+
+    width:100%;
+    height:280px;
+
+    background:linear-gradient(
+        to top,
+        rgba(56,189,248,.15),
+        transparent
+    );
+
+    clip-path:polygon(
+        0% 95%,
+        10% 88%,
+        20% 90%,
+        30% 75%,
+        40% 78%,
+        50% 55%,
+        60% 60%,
+        70% 35%,
+        80% 40%,
+        90% 18%,
+        100% 5%,
+        100% 100%,
+        0% 100%
+    );
+}
+
+.hero-content{
+    max-width:650px;
+    position:relative;
+    z-index:2;
+}
+
+.hero-content h1{
+    font-size:clamp(2.8rem, 6vw, 5rem);
+    line-height:1.1;
+    margin-bottom:20px;
+    font-weight:800;
+}
+
+.hero-content p{
+    color:var(--text-secondary);
+    font-size:1.1rem;
+    line-height:1.8;
+    margin-bottom:35px;
+}
+
+.hero-btn{
+    padding:15px 35px;
+
+    border:none;
+    border-radius:12px;
+
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+    color:white;
+
+    font-size:1rem;
+    font-weight:600;
+
+    cursor:pointer;
+    transition:.3s ease;
+}
+
+.hero-btn:hover{
+    transform:translateY(-5px);
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width:992px){
+
+    body::after{
+        width:220px;
+        height:220px;
+        top:150px;
+    }
+
+    .nav-links{
+        gap:20px;
+    }
+
+    .hero{
+        min-height:75vh;
+    }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width:768px){
+
+    header{
+        padding:15px 5%;
+    }
+
+    .navbar{
+        flex-direction:column;
+        gap:20px;
+        text-align:center;
+    }
+
+    .nav-links{
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:15px;
+    }
+
+    .hero{
+        justify-content:center;
+        text-align:center;
+        padding:60px 5%;
+        min-height:auto;
+    }
+
+    .hero-content{
+        width:100%;
+    }
+
+    .hero-content p{
+        font-size:1rem;
+    }
+
+    body::after{
+        width:170px;
+        height:170px;
+        right:-30px;
+        top:180px;
+        opacity:.5;
+    }
+}
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-width:480px){
+
+    .navbar{
+        padding:15px;
+    }
+
+    .signup-btn{
+        width:100%;
+    }
+
+    .hero-btn{
+        width:100%;
+    }
+
+    .hero-content h1{
+        line-height:1.2;
+    }
+
+    body::after{
+        width:130px;
+        height:130px;
+        opacity:.3;
+    }
+}
