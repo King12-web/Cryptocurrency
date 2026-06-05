@@ -918,29 +918,15 @@ html{
     }
 
 }
-/* HERO SIGN IN LINK */
+/* =========================
+   AUTH PAGES (SIGN IN / SIGN UP)
+========================= */
 
-.signin-link{
-    display:block;
-    margin-top:15px;
-
-    color: var(--muted);
-    text-decoration:none;
-
-    font-size:0.95rem;
-
-    transition:0.3s ease;
-}
-
-.signin-link:hover{
-    color: var(--accent);
-}
 .auth-container{
     min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-
     padding:20px;
 }
 
@@ -952,11 +938,14 @@ html{
     border:1px solid rgba(255,255,255,0.1);
     backdrop-filter:blur(20px);
 
-    padding:30px;
+    padding:clamp(20px, 5vw, 40px);
     border-radius:20px;
 
     text-align:center;
+    box-sizing:border-box;
 }
+
+/* TEXT */
 
 .auth-card h2{
     margin-bottom:10px;
@@ -967,24 +956,36 @@ html{
     margin-bottom:20px;
 }
 
+/* FORM */
+
 .auth-card form{
     display:flex;
     flex-direction:column;
     gap:12px;
 }
 
+/* INPUTS */
+
 .auth-card input{
+    width:100%;
     padding:12px;
+
     border-radius:10px;
-
     border:1px solid var(--border);
-    background:transparent;
 
+    background:transparent;
     color:var(--text);
+
+    font-size:16px; /* prevents zoom on mobile */
+    box-sizing:border-box;
 }
 
+/* BUTTON */
+
 .auth-card button{
+    width:100%;
     padding:12px;
+
     border:none;
     border-radius:10px;
 
@@ -992,14 +993,48 @@ html{
     color:white;
 
     cursor:pointer;
+
+    font-size:16px;
+    transition:0.3s ease;
 }
+
+.auth-card button:hover{
+    transform:translateY(-3px);
+}
+
+/* SWITCH LINK */
 
 .auth-switch{
     margin-top:15px;
     font-size:0.9rem;
+    color:var(--muted);
 }
 
 .auth-switch a{
     color:var(--accent);
     text-decoration:none;
+}
+
+.auth-switch a:hover{
+    text-decoration:underline;
+}
+
+/* =========================
+   MOBILE RESPONSIVE FIX
+========================= */
+
+@media (max-width: 480px){
+
+    .auth-card{
+        padding:20px;
+        border-radius:16px;
+    }
+
+    .auth-card h2{
+        font-size:1.5rem;
+    }
+
+    .auth-card p{
+        font-size:0.9rem;
+    }
 }
