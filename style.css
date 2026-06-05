@@ -935,3 +935,71 @@ html{
 .signin-link:hover{
     color: var(--accent);
 }
+.auth-container{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+}
+
+.auth-card{
+    width:100%;
+    max-width:420px;
+
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    backdrop-filter:blur(20px);
+
+    padding:30px;
+    border-radius:20px;
+
+    text-align:center;
+}
+
+.auth-card h2{
+    margin-bottom:10px;
+}
+
+.auth-card p{
+    color:var(--muted);
+    margin-bottom:20px;
+}
+
+.auth-card form{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.auth-card input{
+    padding:12px;
+    border-radius:10px;
+
+    border:1px solid var(--border);
+    background:transparent;
+
+    color:var(--text);
+}
+
+.auth-card button{
+    padding:12px;
+    border:none;
+    border-radius:10px;
+
+    background:linear-gradient(135deg,#38bdf8,#8b5cf6);
+    color:white;
+
+    cursor:pointer;
+}
+
+.auth-switch{
+    margin-top:15px;
+    font-size:0.9rem;
+}
+
+.auth-switch a{
+    color:var(--accent);
+    text-decoration:none;
+}
