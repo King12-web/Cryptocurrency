@@ -3,260 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Moon Auth</title>
+  <title>NexVault – Auth</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --gold: #C9A84C;
-      --gold-light: #F0D080;
-      --dark: #0A0C10;
-      --card: #111318;
-      --border: #2A2E3A;
-      --text: #E8EAF0;
-      --muted: #6B7280;
-      --danger: #E24B4A;
-      --success: #1D9E75;
-      --input-bg: #0D0F14;
+      --gold: #C9A84C; --gold-light: #F0D080; --dark: #0A0C10; --card: #111318;
+      --border: #2A2E3A; --text: #E8EAF0; --muted: #6B7280;
+      --danger: #E24B4A; --success: #1D9E75; --input-bg: #0D0F14;
     }
-
-    body {
-      font-family: 'Syne', sans-serif;
-      background: var(--dark);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(201,168,76,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(201,168,76,.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-    }
-
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 420px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .panel::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    }
-
-    .panel-header {
-      padding: 1.75rem 1.75rem 0;
-      text-align: center;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 1rem;
-    }
-
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: var(--gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
+    body { font-family: 'Syne', sans-serif; background: var(--dark); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(201,168,76,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,.04) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
+    .panel { background: var(--card); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 420px; overflow: hidden; position: relative; }
+    .panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+    .panel-header { padding: 1.75rem 1.75rem 0; text-align: center; }
+    .logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 1rem; }
+    .logo-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--gold); display: flex; align-items: center; justify-content: center; }
     .logo-icon svg { width: 20px; height: 20px; }
-
-    .logo-text {
-      font-family: 'Space Mono', monospace;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: 2px;
-    }
-
-    .tabs {
-      display: flex;
-      margin: 1.5rem 1.75rem 0;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 8px 0;
-      font-family: 'Syne', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      color: var(--muted);
-      transition: all .2s;
-      letter-spacing: .5px;
-    }
-
-    .tab.active {
-      background: var(--gold);
-      color: #0A0C10;
-    }
-
-    .toast {
-      margin: 1.25rem 1.75rem 0;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      display: none;
-      align-items: center;
-      gap: 8px;
-    }
-
+    .logo-text { font-family: 'Space Mono', monospace; font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: 2px; }
+    .tabs { display: flex; margin: 1.5rem 1.75rem 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .tab { flex: 1; padding: 8px 0; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; background: transparent; border: none; cursor: pointer; color: var(--muted); transition: all .2s; letter-spacing: .5px; }
+    .tab.active { background: var(--gold); color: #0A0C10; }
+    .toast { margin: 1.25rem 1.75rem 0; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; display: none; align-items: center; gap: 8px; }
     .toast.show { display: flex; }
-
-    .toast.err {
-      background: rgba(226,75,74,.12);
-      border: 1px solid rgba(226,75,74,.3);
-      color: #F09595;
-    }
-
-    .toast.ok {
-      background: rgba(29,158,117,.12);
-      border: 1px solid rgba(29,158,117,.3);
-      color: #5DCAA5;
-    }
-
+    .toast.err { background: rgba(226,75,74,.12); border: 1px solid rgba(226,75,74,.3); color: #F09595; }
+    .toast.ok  { background: rgba(29,158,117,.12); border: 1px solid rgba(29,158,117,.3); color: #5DCAA5; }
     .form-body { padding: 1.5rem 1.75rem 1.75rem; }
-
     .field { margin-bottom: 1rem; }
-
-    .field label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    .field input {
-      width: 100%;
-      background: var(--input-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-family: 'Syne', sans-serif;
-      font-size: 14px;
-      color: var(--text);
-      outline: none;
-      transition: border-color .2s;
-    }
-
+    .field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+    .field input { width: 100%; background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-family: 'Syne', sans-serif; font-size: 14px; color: var(--text); outline: none; transition: border-color .2s; }
     .field input:focus { border-color: var(--gold); }
     .field input::placeholder { color: var(--muted); }
-
-    .field-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .strength {
-      height: 3px;
-      border-radius: 2px;
-      background: var(--border);
-      overflow: hidden;
-      margin-top: 6px;
-    }
-
-    .strength-bar {
-      height: 100%;
-      border-radius: 2px;
-      transition: width .3s, background .3s;
-      width: 0;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 12px;
-      font-family: 'Syne', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      letter-spacing: .5px;
-      transition: all .2s;
-      margin-top: 4px;
-    }
-
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .strength { height: 3px; border-radius: 2px; background: var(--border); overflow: hidden; margin-top: 6px; }
+    .strength-bar { height: 100%; border-radius: 2px; transition: width .3s, background .3s; width: 0; }
+    .btn { width: 100%; padding: 12px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; letter-spacing: .5px; transition: all .2s; margin-top: 4px; }
     .btn-gold { background: var(--gold); color: #0A0C10; }
     .btn-gold:hover { background: var(--gold-light); }
     .btn-gold:active { transform: scale(.98); }
-
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 1rem 0;
-    }
-
-    .users-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      justify-content: center;
-      font-size: 11px;
-      color: var(--muted);
-      font-family: 'Space Mono', monospace;
-      padding: .5rem 0;
-    }
-
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--success);
-    }
-
-    .hint {
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .hint span {
-      color: var(--gold);
-      cursor: pointer;
-      font-weight: 600;
-    }
+    .divider { height: 1px; background: var(--border); margin: 1rem 0; }
+    .users-badge { display: flex; align-items: center; gap: 6px; justify-content: center; font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; padding: .5rem 0; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+    .hint { text-align: center; font-size: 12px; color: var(--muted); }
+    .hint span { color: var(--gold); cursor: pointer; font-weight: 600; }
   </style>
 </head>
 <body>
-
   <div class="panel">
-
     <div class="panel-header">
       <div class="logo">
         <div class="logo-icon">
@@ -265,7 +60,7 @@
             <path d="M10 2v12M3 6l7 4 7-4" stroke="#0A0C10" stroke-width="1.5"/>
           </svg>
         </div>
-        <span class="logo-text">Moon Vault</span>
+        <span class="logo-text">MOONVAULT</span>
       </div>
     </div>
 
@@ -276,7 +71,6 @@
 
     <div id="toast" class="toast"></div>
 
-    <!-- Sign In Form -->
     <div id="form-signin" class="form-body">
       <div class="field">
         <label>Email</label>
@@ -286,16 +80,12 @@
         <label>Password</label>
         <input type="password" id="si-pass" placeholder="••••••••" />
       </div>
-      <button class="btn btn-gold" onclick="doSignIn()">Access Moon</button>
+      <button class="btn btn-gold" onclick="doSignIn()">Access Vault</button>
       <div class="divider"></div>
-      <div class="users-badge">
-        <span class="dot"></span>
-        
-      </div>
+      <div class="users-badge"><span class="dot"></span><span id="user-count"></span></div>
       <div class="hint">No account? <span onclick="switchTab('signup')">Create one →</span></div>
     </div>
 
-    <!-- Sign Up Form -->
     <div id="form-signup" class="form-body" style="display:none">
       <div class="field-row">
         <div class="field">
@@ -324,84 +114,98 @@
       <div class="divider"></div>
       <div class="hint">Already have an account? <span onclick="switchTab('signin')">Sign in →</span></div>
     </div>
-
   </div>
 
   <script>
     const STORAGE_KEY = 'nexvault_users';
+    const LOGS_KEY    = 'nexvault_logs';
 
-    function getUsers() {
+    function getUsers() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]') } catch(e){ return [] } }
+    function saveUsers(u){ localStorage.setItem(STORAGE_KEY, JSON.stringify(u)) }
+
+    function logEvent(type, email) {
       try {
-        const data = localStorage.getItem(STORAGE_KEY);
-        return data ? JSON.parse(data) : [];
-      } catch(e) { return []; }
-    }
-
-    function saveUsers(users) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+        const logs = JSON.parse(localStorage.getItem(LOGS_KEY)||'[]');
+        logs.push({ type, email, ts: Date.now() });
+        localStorage.setItem(LOGS_KEY, JSON.stringify(logs));
+      } catch(e) {}
     }
 
     function showToast(msg, type) {
       const t = document.getElementById('toast');
-      const icon = type === 'err'
+      const icon = type==='err'
         ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
         : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>';
       t.className = 'toast show ' + type;
       t.innerHTML = icon + msg;
-      clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => { t.className = 'toast'; }, 3500);
+      clearTimeout(window._tt);
+      window._tt = setTimeout(()=>{ t.className='toast' }, 3500);
     }
 
     function switchTab(tab) {
-      document.getElementById('form-signin').style.display = tab === 'signin' ? '' : 'none';
-      document.getElementById('form-signup').style.display = tab === 'signup' ? '' : 'none';
-      document.getElementById('tab-signin').className = 'tab' + (tab === 'signin' ? ' active' : '');
-      document.getElementById('tab-signup').className = 'tab' + (tab === 'signup' ? ' active' : '');
+      document.getElementById('form-signin').style.display = tab==='signin' ? '' : 'none';
+      document.getElementById('form-signup').style.display = tab==='signup' ? '' : 'none';
+      document.getElementById('tab-signin').className = 'tab'+(tab==='signin'?' active':'');
+      document.getElementById('tab-signup').className = 'tab'+(tab==='signup'?' active':'');
       document.getElementById('toast').className = 'toast';
-      if (tab === 'signin') updateCount();
+      if(tab==='signin') updateCount();
     }
 
     function checkStrength(v) {
       const bar = document.getElementById('str-bar');
       let s = 0;
-      if (v.length >= 6) s++;
-      if (v.length >= 10) s++;
-      if (/[A-Z]/.test(v) && /[0-9]/.test(v)) s++;
-      if (/[^A-Za-z0-9]/.test(v)) s++;
-      const widths = [0, 30, 55, 80, 100];
-      const colors = ['', '#E24B4A', '#BA7517', '#C9A84C', '#1D9E75'];
-      bar.style.width      = widths[s] + '%';
-      bar.style.background = colors[s];
+      if(v.length>=6) s++;
+      if(v.length>=10) s++;
+      if(/[A-Z]/.test(v)&&/[0-9]/.test(v)) s++;
+      if(/[^A-Za-z0-9]/.test(v)) s++;
+      bar.style.width      = [0,30,55,80,100][s]+'%';
+      bar.style.background = ['','#E24B4A','#BA7517','#C9A84C','#1D9E75'][s];
     }
 
     function updateCount() {
-      const users = getUsers();
-      const el = document.getElementById('user-count');
-      el.textContent = users.length + ' registered user' + (users.length === 1 ? '' : 's');
+      // const users = getUsers();
+      document.getElementById('user-count').textContent = users.length+' registered user'+(users.length===1?'':'s');
     }
 
     function doSignIn() {
-      const email = document.getElementById('si-email').value.trim().toLowerCase();
-      const pass  = document.getElementById('si-pass').value;
+  const email = document.getElementById('si-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('si-pass').value;
 
-      if (!email || !pass) {
-        showToast('Please fill in all fields.', 'err');
-        return;
-      }
+  if(!email || !pass){
+    showToast('Please fill in all fields.','err');
+    return;
+  }
 
-      const users = getUsers();
-      const user  = users.find(u => u.email === email && u.password === pass);
+  const user = getUsers().find(
+    u => u.email === email && u.password === pass
+  );
 
-      if (!user) {
-        showToast('Incorrect email or password.', 'err');
-      } else {
-        showToast('Welcome back, ' + user.firstName + '! Access granted.', 'ok');
-        document.getElementById('si-email').value = '';
-        document.getElementById('si-pass').value  = '';
-        // Redirect to your dashboard here:
-        // window.location.href = 'dashboard.html';
-      }
-    }
+  if(!user) {
+    logEvent('fail', email);
+    showToast('Incorrect email or password.','err');
+  } else {
+
+    // Save logged-in user
+    localStorage.setItem(
+      'currentUser',
+      JSON.stringify(user)
+    );
+
+    logEvent('signin', email);
+
+    showToast(
+      'Welcome back, ' + user.firstName + '! Access granted.',
+      'ok'
+    );
+
+    document.getElementById('si-email').value = '';
+    document.getElementById('si-pass').value = '';
+
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 1000);
+  }
+}
 
     function doSignUp() {
       const first = document.getElementById('su-first').value.trim();
@@ -409,53 +213,26 @@
       const email = document.getElementById('su-email').value.trim().toLowerCase();
       const pass  = document.getElementById('su-pass').value;
       const pass2 = document.getElementById('su-pass2').value;
-
-      if (!first || !last || !email || !pass || !pass2) {
-        showToast('Please fill in all fields.', 'err');
-        return;
-      }
-      if (!/\S+@\S+\.\S+/.test(email)) {
-        showToast('Enter a valid email address.', 'err');
-        return;
-      }
-      if (pass.length < 6) {
-        showToast('Password must be at least 6 characters.', 'err');
-        return;
-      }
-      if (pass !== pass2) {
-        showToast('Passwords do not match.', 'err');
-        return;
-      }
-
+      if(!first||!last||!email||!pass||!pass2){ showToast('Please fill in all fields.','err'); return; }
+      if(!/\S+@\S+\.\S+/.test(email)){ showToast('Enter a valid email address.','err'); return; }
+      if(pass.length<6){ showToast('Password must be at least 6 characters.','err'); return; }
+      if(pass!==pass2){ showToast('Passwords do not match.','err'); return; }
       const users = getUsers();
-      if (users.find(u => u.email === email)) {
-        showToast('An account with this email already exists.', 'err');
-        return;
-      }
-
-      users.push({
-        firstName: first,
-        lastName:  last,
-        email:     email,
-        password:  pass,
-        createdAt: Date.now()
-      });
-
+      if(users.find(u=>u.email===email)){ showToast('An account with this email already exists.','err'); return; }
+      users.push({ firstName:first, lastName:last, email, password:pass, createdAt:Date.now() });
       saveUsers(users);
-      showToast('Account created! You can now sign in.', 'ok');
-
-      document.getElementById('su-first').value = '';
-      document.getElementById('su-last').value  = '';
-      document.getElementById('su-email').value = '';
-      document.getElementById('su-pass').value  = '';
-      document.getElementById('su-pass2').value = '';
-      document.getElementById('str-bar').style.width = '0';
-
-      setTimeout(() => switchTab('signin'), 1600);
+      logEvent('signup', email);
+      showToast('Account created! You can now sign in.','ok');
+      document.getElementById('su-first').value='';
+      document.getElementById('su-last').value='';
+      document.getElementById('su-email').value='';
+      document.getElementById('su-pass').value='';
+      document.getElementById('su-pass2').value='';
+      document.getElementById('str-bar').style.width='0';
+      setTimeout(()=>switchTab('signin'), 1600);
     }
 
     updateCount();
   </script>
-
 </body>
 </html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NexVault – Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --gold:#C9A84C; --gold-light:#F0D080; --gold-dim:#7A6330;
+      --dark:#07090D; --bg:#0A0C12; --card:#0F1219;
+      --card2:#13161F; --border:#1E2330; --border2:#252B3A;
+      --text:#E8EAF2; --muted:#5A6075; --muted2:#8891A8;
+      --success:#1D9E75; --danger:#E24B4A; --info:#4A7FE2; --warn:#C9A84C;
+    }
+    html,body{height:100%}
+    body{font-family:'Syne',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(201,168,76,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+
+    /* LOGIN GATE */
+    #login-gate{position:fixed;inset:0;z-index:100;background:var(--dark);display:flex;align-items:center;justify-content:center;padding:1rem;}
+    .login-box{background:var(--card);border:1px solid var(--border2);border-radius:16px;width:100%;max-width:360px;padding:2rem;position:relative;overflow:hidden;}
+    .login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+    .login-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:1.5rem;}
+    .login-logo .ico{width:38px;height:38px;border-radius:8px;background:var(--gold);display:flex;align-items:center;justify-content:center;}
+    .login-logo .ico svg{width:20px;height:20px}
+    .login-logo .wordmark{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--text);letter-spacing:2px;line-height:1.2;}
+    .login-logo .wordmark small{display:block;font-size:9px;color:var(--gold);letter-spacing:3px;}
+    .login-box h2{font-size:17px;font-weight:700;margin-bottom:4px}
+    .login-box p{font-size:12px;color:var(--muted2);margin-bottom:1.5rem}
+    .lg-field{margin-bottom:1rem}
+    .lg-field label{display:block;font-size:11px;font-weight:600;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+    .lg-field input{width:100%;background:#0A0C12;border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s;}
+    .lg-field input:focus{border-color:var(--gold)}
+    .lg-field input::placeholder{color:var(--muted)}
+    .lg-btn{width:100%;padding:11px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;background:var(--gold);color:#0A0C10;border:none;border-radius:8px;cursor:pointer;letter-spacing:.5px;transition:all .2s;}
+    .lg-btn:hover{background:var(--gold-light)}
+    .lg-err{margin-top:.75rem;padding:8px 12px;border-radius:6px;font-size:12px;font-weight:600;background:rgba(226,75,74,.12);border:1px solid rgba(226,75,74,.3);color:#F09595;display:none;}
+
+    /* LAYOUT */
+    #app{display:none;position:relative;z-index:1;min-height:100vh}
+    .sidebar{position:fixed;top:0;left:0;bottom:0;width:220px;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:10;}
+    .sb-logo{padding:1.5rem 1.25rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+    .sb-logo .ico{width:32px;height:32px;border-radius:7px;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .sb-logo .ico svg{width:17px;height:17px}
+    .sb-logo .wordmark{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--text);letter-spacing:1.5px;line-height:1.2;}
+    .sb-logo .wordmark small{display:block;font-size:9px;color:var(--gold);letter-spacing:2.5px}
+    .sb-nav{flex:1;padding:1rem .75rem;display:flex;flex-direction:column;gap:2px}
+    .sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted2);cursor:pointer;transition:all .2s;letter-spacing:.3px;}
+    .sb-item:hover{background:var(--card2);color:var(--text)}
+    .sb-item.active{background:rgba(201,168,76,.12);color:var(--gold)}
+    .sb-item svg{width:15px;height:15px;flex-shrink:0}
+    .sb-footer{padding:.75rem;border-top:1px solid var(--border);}
+    .sb-admin{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--card2);border-radius:8px;}
+    .sb-avatar{width:30px;height:30px;border-radius:6px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#0A0C10;flex-shrink:0;}
+    .sb-admin-info{flex:1;min-width:0}
+    .sb-admin-name{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sb-admin-role{font-size:10px;color:var(--gold);letter-spacing:1px;font-family:'Space Mono',monospace}
+    .logout-btn{background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;border-radius:4px;transition:color .2s;}
+    .logout-btn:hover{color:var(--danger)}
+    .logout-btn svg{width:14px;height:14px;display:block}
+    .main{margin-left:220px;padding:2rem;min-height:100vh}
+    .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;}
+    .page-title{font-size:22px;font-weight:800;color:var(--text)}
+    .page-title span{color:var(--gold)}
+    .page-sub{font-size:12px;color:var(--muted2);margin-top:2px;font-family:'Space Mono',monospace}
+    .refresh-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--card);border:1px solid var(--border2);border-radius:8px;font-family:'Syne',sans-serif;font-size:12px;font-weight:600;color:var(--muted2);cursor:pointer;transition:all .2s;}
+    .refresh-btn:hover{border-color:var(--gold);color:var(--gold)}
+    .refresh-btn svg{width:13px;height:13px}
+
+    /* STATS */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+    .stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;position:relative;overflow:hidden;}
+    .stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent,var(--gold)),transparent);}
+    .stat-label{font-size:11px;font-weight:600;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;margin-bottom:.5rem}
+    .stat-value{font-size:28px;font-weight:800;color:var(--text);font-family:'Space Mono',monospace;line-height:1}
+    .stat-sub{font-size:11px;color:var(--muted2);margin-top:.4rem;font-family:'Space Mono',monospace}
+    .stat-icon{position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;opacity:.15;}
+    .stat-icon svg{width:18px;height:18px}
+
+    /* TABLES */
+    .section-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+    .section-title .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(201,168,76,.15);color:var(--gold);font-family:'Space Mono',monospace;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem;}
+    .card-toolbar{padding:.75rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+    .search-box{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border2);border-radius:7px;padding:6px 12px;flex:1;max-width:280px;}
+    .search-box svg{width:13px;height:13px;color:var(--muted);flex-shrink:0}
+    .search-box input{background:none;border:none;outline:none;font-family:'Syne',sans-serif;font-size:12px;color:var(--text);width:100%;}
+    .search-box input::placeholder{color:var(--muted)}
+    .filter-tabs{display:flex;gap:4px}
+    .ftab{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;background:none;border:1px solid transparent;cursor:pointer;color:var(--muted2);transition:all .2s;font-family:'Syne',sans-serif;}
+    .ftab:hover{color:var(--text)}
+    .ftab.active{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.3);color:var(--gold)}
+    table{width:100%;border-collapse:collapse}
+    thead tr{border-bottom:1px solid var(--border)}
+    th{padding:.75rem 1.25rem;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;text-align:left;white-space:nowrap;}
+    tbody tr{border-bottom:1px solid var(--border);transition:background .15s}
+    tbody tr:last-child{border-bottom:none}
+    tbody tr:hover{background:rgba(255,255,255,.02)}
+    td{padding:.75rem 1.25rem;font-size:13px;color:var(--text);vertical-align:middle}
+    .avatar-cell{display:flex;align-items:center;gap:10px}
+    .av{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Space Mono',monospace;color:#0A0C10;flex-shrink:0;}
+    .av-name{font-weight:600;font-size:13px}
+    .av-email{font-size:11px;color:var(--muted2);font-family:'Space Mono',monospace}
+    .chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;font-family:'Space Mono',monospace;}
+    .chip.in{background:rgba(29,158,117,.15);color:#5DCAA5;border:1px solid rgba(29,158,117,.25)}
+    .chip.out{background:rgba(226,75,74,.12);color:#F09595;border:1px solid rgba(226,75,74,.2)}
+    .chip.new{background:rgba(201,168,76,.12);color:var(--gold);border:1px solid rgba(201,168,76,.25)}
+    .chip-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+    .mono{font-family:'Space Mono',monospace;font-size:12px;color:var(--muted2)}
+    .del-btn{background:none;border:none;cursor:pointer;color:var(--muted);padding:5px;border-radius:5px;transition:all .2s;}
+    .del-btn:hover{color:var(--danger);background:rgba(226,75,74,.1)}
+    .del-btn svg{width:13px;height:13px;display:block}
+    .empty-state{padding:3rem;text-align:center;color:var(--muted);font-size:13px;font-family:'Space Mono',monospace;}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+    .log-list{padding:.5rem 0}
+    .log-item{display:flex;align-items:flex-start;gap:12px;padding:.75rem 1.25rem;border-bottom:1px solid var(--border);}
+    .log-item:last-child{border-bottom:none}
+    .log-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+    .log-dot.signup{background:var(--success)}
+    .log-dot.signin{background:var(--info)}
+    .log-dot.fail{background:var(--danger)}
+    .log-text{font-size:12px;color:var(--text);line-height:1.4}
+    .log-time{font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px}
+    .no-data{padding:2rem;text-align:center;font-size:12px;color:var(--muted);font-family:'Space Mono',monospace}
+    @media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<div id="login-gate">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="ico">
+        <svg viewBox="0 0 20 20" fill="none">
+          <path d="M10 2L3 6v8l7 4 7-4V6L10 2z" stroke="#0A0C10" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M10 2v12M3 6l7 4 7-4" stroke="#0A0C10" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="wordmark">NEXVAULT<small>ADMIN PANEL</small></div>
+    </div>
+    <h2>Admin Access</h2>
+    <p>Enter your admin credentials to continue</p>
+    <div class="lg-field">
+      <label>Username</label>
+      <input type="text" id="lg-user" placeholder="admin" />
+    </div>
+    <div class="lg-field">
+      <label>Password</label>
+      <input type="password" id="lg-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAdminLogin()" />
+    </div>
+    <button class="lg-btn" onclick="doAdminLogin()">Enter Admin Panel</button>
+    <div class="lg-err" id="lg-err">Incorrect admin credentials.</div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="ico">
+        <svg viewBox="0 0 20 20" fill="none">
+          <path d="M10 2L3 6v8l7 4 7-4V6L10 2z" stroke="#0A0C10" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M10 2v12M3 6l7 4 7-4" stroke="#0A0C10" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="wordmark">NEXVAULT<small>ADMIN</small></div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-item active" onclick="showPage('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="sb-item" onclick="showPage('users')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Users
+      </div>
+      <div class="sb-item" onclick="showPage('activity')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Activity Log
+      </div>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-admin">
+        <div class="sb-avatar">AD</div>
+        <div class="sb-admin-info">
+          <div class="sb-admin-name">Admin</div>
+          <div class="sb-admin-role">SUPER ADMIN</div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()" title="Logout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Overview <span>Dashboard</span></div>
+          <div class="page-sub" id="dash-time">—</div>
+        </div>
+        <button class="refresh-btn" onclick="renderAll()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Refresh
+        </button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div class="stat-label">Total Users</div>
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-sub">registered accounts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div class="stat-label">Signed Up Today</div>
+          <div class="stat-value" id="stat-today">0</div>
+          <div class="stat-sub">in the last 24h</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="stat-label">Sign-In Events</div>
+          <div class="stat-value" id="stat-logins">0</div>
+          <div class="stat-sub">total login attempts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="stat-label">Failed Logins</div>
+          <div class="stat-value" id="stat-fails">0</div>
+          <div class="stat-sub">rejected attempts</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-toolbar">
+            <div class="section-title" style="margin:0">Recent Sign-Ups <span class="badge" id="badge-signups">0</span></div>
+          </div>
+          <table>
+            <thead><tr><th>User</th><th>Joined</th></tr></thead>
+            <tbody id="recent-signups-body"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-toolbar">
+            <div class="section-title" style="margin:0">Recent Activity <span class="badge" id="badge-activity">0</span></div>
+          </div>
+          <div class="log-list" id="recent-activity-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div id="page-users" style="display:none">
+      <div class="page-header">
+        <div>
+          <div class="page-title">All <span>Users</span></div>
+          <div class="page-sub">Manage registered accounts</div>
+        </div>
+        <button class="refresh-btn" onclick="renderAll()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Refresh
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-toolbar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="user-search" placeholder="Search by name or email…" oninput="renderUsers()" />
+          </div>
+          <div class="filter-tabs">
+            <button class="ftab active" onclick="setFilter('all',this)">All</button>
+            <button class="ftab" onclick="setFilter('today',this)">Today</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>User</th><th>Joined</th><th>Last Login</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody id="users-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ACTIVITY -->
+    <div id="page-activity" style="display:none">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Activity <span>Log</span></div>
+          <div class="page-sub">All sign-in and sign-up events</div>
+        </div>
+        <button class="refresh-btn" onclick="renderAll()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Refresh
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-toolbar">
+          <div class="filter-tabs">
+            <button class="ftab active" onclick="setLogFilter('all',this)">All</button>
+            <button class="ftab" onclick="setLogFilter('signup',this)">Sign-Ups</button>
+            <button class="ftab" onclick="setLogFilter('signin',this)">Sign-Ins</button>
+            <button class="ftab" onclick="setLogFilter('fail',this)">Failed</button>
+          </div>
+          <button class="refresh-btn" onclick="clearLogs()" style="color:var(--danger);border-color:rgba(226,75,74,.3)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            Clear Logs
+          </button>
+        </div>
+        <table>
+          <thead><tr><th>Event</th><th>User</th><th>Time</th><th>Status</th></tr></thead>
+          <tbody id="activity-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const ADMIN_USER  = 'admin';
+  const ADMIN_PASS  = 'admin123';
+  const USERS_KEY   = 'nexvault_users';
+  const LOGS_KEY    = 'nexvault_logs';
+  const SESSION_KEY = 'nexvault_admin_session';
+  let userFilter = 'all';
+  let logFilter  = 'all';
+
+  function getUsers() { try { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]') } catch(e){ return [] } }
+  function getLogs()  { try { return JSON.parse(localStorage.getItem(LOGS_KEY)  || '[]') } catch(e){ return [] } }
+  function saveLogs(l){ localStorage.setItem(LOGS_KEY, JSON.stringify(l)) }
+
+  function fmtDate(ts) {
+    if(!ts) return '—';
+    const d = new Date(ts);
+    return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) + ' ' + d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  }
+
+  function isToday(ts) {
+    if(!ts) return false;
+    return new Date(ts).toDateString() === new Date().toDateString();
+  }
+
+  function avatarColor(name) {
+    const colors = ['#C9A84C','#4A7FE2','#1D9E75','#9B59B6','#E24B4A','#E67E22'];
+    let h = 0; for(const c of name) h = c.charCodeAt(0) + ((h<<5)-h);
+    return colors[Math.abs(h) % colors.length];
+  }
+
+  function initials(first, last) { return ((first||'?')[0]+(last||'?')[0]).toUpperCase() }
+
+  function doAdminLogin() {
+    const u = document.getElementById('lg-user').value.trim();
+    const p = document.getElementById('lg-pass').value;
+    if(u === ADMIN_USER && p === ADMIN_PASS) {
+      localStorage.setItem(SESSION_KEY, '1');
+      document.getElementById('login-gate').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      renderAll();
+    } else {
+      const err = document.getElementById('lg-err');
+      err.style.display = 'block';
+      setTimeout(()=>err.style.display='none', 3000);
+    }
+  }
+
+  function doLogout() {
+    localStorage.removeItem(SESSION_KEY);
+    document.getElementById('login-gate').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('lg-user').value = '';
+    document.getElementById('lg-pass').value = '';
+  }
+
+  function showPage(page) {
+    ['dashboard','users','activity'].forEach(p => {
+      document.getElementById('page-'+p).style.display = p===page ? '' : 'none';
+    });
+    document.querySelectorAll('.sb-item').forEach((el,i) => {
+      el.classList.toggle('active', ['dashboard','users','activity'][i] === page);
+    });
+    renderAll();
+  }
+
+  function setFilter(f, el) {
+    userFilter = f;
+    document.querySelectorAll('#page-users .ftab').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active');
+    renderUsers();
+  }
+
+  function setLogFilter(f, el) {
+    logFilter = f;
+    document.querySelectorAll('#page-activity .ftab').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active');
+    renderActivity();
+  }
+
+  function renderAll() { renderDashboard(); renderUsers(); renderActivity(); }
+
+  function renderDashboard() {
+    const users = getUsers();
+    const logs  = getLogs();
+    document.getElementById('dash-time').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+    document.getElementById('stat-total').textContent  = users.length;
+    document.getElementById('stat-today').textContent  = users.filter(u=>isToday(u.createdAt)).length;
+    document.getElementById('stat-logins').textContent = logs.filter(l=>l.type==='signin').length;
+    document.getElementById('stat-fails').textContent  = logs.filter(l=>l.type==='fail').length;
+    const recent = [...users].sort((a,b)=>b.createdAt-a.createdAt).slice(0,6);
+    document.getElementById('badge-signups').textContent = users.length;
+    const rBody = document.getElementById('recent-signups-body');
+    rBody.innerHTML = !recent.length
+      ? '<tr><td colspan="2" class="empty-state">No users yet</td></tr>'
+      : recent.map(u=>`<tr>
+          <td><div class="avatar-cell">
+            <div class="av" style="background:${avatarColor(u.firstName)}">${initials(u.firstName,u.lastName)}</div>
+            <div><div class="av-name">${u.firstName} ${u.lastName}</div><div class="av-email">${u.email}</div></div>
+          </div></td>
+          <td class="mono">${fmtDate(u.createdAt)}</td>
+        </tr>`).join('');
+    const recentLogs = [...logs].reverse().slice(0,8);
+    document.getElementById('badge-activity').textContent = logs.length;
+    const aList = document.getElementById('recent-activity-list');
+    aList.innerHTML = !recentLogs.length
+      ? '<div class="no-data">No activity yet</div>'
+      : recentLogs.map(l=>`<div class="log-item">
+          <div class="log-dot ${l.type}"></div>
+          <div>
+            <div class="log-text">${logText(l)}</div>
+            <div class="log-time">${fmtDate(l.ts)}</div>
+          </div>
+        </div>`).join('');
+  }
+
+  function logText(l) {
+    if(l.type==='signup') return '<b>'+l.email+'</b> created a new account';
+    if(l.type==='signin') return '<b>'+l.email+'</b> signed in successfully';
+    if(l.type==='fail')   return 'Failed login attempt for <b>'+l.email+'</b>';
+    return l.email;
+  }
+
+  function renderUsers() {
+    const q    = (document.getElementById('user-search')?.value||'').toLowerCase();
+    let users  = getUsers();
+    const logs = getLogs();
+    if(userFilter==='today') users = users.filter(u=>isToday(u.createdAt));
+    if(q) users = users.filter(u=>(u.firstName+' '+u.lastName).toLowerCase().includes(q)||u.email.toLowerCase().includes(q));
+    users = [...users].sort((a,b)=>b.createdAt-a.createdAt);
+    const tbody = document.getElementById('users-table-body');
+    if(!users.length) { tbody.innerHTML='<tr><td colspan="5" class="empty-state">No users found</td></tr>'; return; }
+    tbody.innerHTML = users.map(u=>{
+      const lastLogin = [...logs].reverse().find(l=>l.email===u.email&&l.type==='signin');
+      const isNew = isToday(u.createdAt);
+      return `<tr>
+        <td><div class="avatar-cell">
+          <div class="av" style="background:${avatarColor(u.firstName)}">${initials(u.firstName,u.lastName)}</div>
+          <div><div class="av-name">${u.firstName} ${u.lastName}</div><div class="av-email">${u.email}</div></div>
+        </div></td>
+        <td class="mono">${fmtDate(u.createdAt)}</td>
+        <td class="mono">${lastLogin?fmtDate(lastLogin.ts):'—'}</td>
+        <td>${isNew?'<span class="chip new"><span class="chip-dot"></span>New</span>':'<span class="chip in"><span class="chip-dot"></span>Active</span>'}</td>
+        <td><button class="del-btn" onclick="deleteUser('${u.email}')" title="Remove user">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        </button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  function deleteUser(email) {
+    if(!confirm('Remove user '+email+'?')) return;
+    localStorage.setItem(USERS_KEY, JSON.stringify(getUsers().filter(u=>u.email!==email)));
+    renderAll();
+  }
+
+  function renderActivity() {
+    let logs = [...getLogs()].reverse();
+    if(logFilter!=='all') logs = logs.filter(l=>l.type===logFilter);
+    const tbody = document.getElementById('activity-table-body');
+    if(!logs.length) { tbody.innerHTML='<tr><td colspan="4" class="empty-state">No activity logged yet</td></tr>'; return; }
+    tbody.innerHTML = logs.map(l=>{
+      const icon = l.type==='signup'
+        ? '<span class="chip new"><span class="chip-dot"></span>Sign Up</span>'
+        : l.type==='signin'
+        ? '<span class="chip in"><span class="chip-dot"></span>Sign In</span>'
+        : '<span class="chip out"><span class="chip-dot"></span>Failed</span>';
+      return `<tr>
+        <td>${icon}</td>
+        <td class="mono">${l.email}</td>
+        <td class="mono">${fmtDate(l.ts)}</td>
+        <td>${l.type==='fail'?'<span style="font-size:11px;color:var(--danger)">Wrong credentials</span>':'<span style="font-size:11px;color:var(--success)">Success</span>'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function clearLogs() {
+    if(!confirm('Clear all activity logs?')) return;
+    saveLogs([]); renderAll();
+  }
+
+  window.addEventListener('storage', (e) => {
+    if(e.key===USERS_KEY||e.key===LOGS_KEY) renderAll();
+  });
+
+  if(localStorage.getItem(SESSION_KEY)==='1') {
+    document.getElementById('login-gate').style.display='none';
+    document.getElementById('app').style.display='block';
+    renderAll();
+  }
+
+  setInterval(renderAll, 30000);
+</script>
+</body>
+</html>

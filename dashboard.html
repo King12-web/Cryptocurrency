@@ -5,35 +5,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moon Dashboard</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+
+    <!-- Remix Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+        rel="stylesheet"
+    >
 </head>
 <body>
 
-    <header class="dash-header">
-        <h2>🌙 Moon Dashboard</h2>
+    <!-- Dashboard Container -->
+    <div class="dashboard">
 
-        <button id="logoutBtn">Logout</button>
-    </header>
+        <!-- Header -->
+        <header class="dashboard-header">
 
-    <main class="dash-main">
+            <button class="menu-btn" aria-label="Open Menu">
+                <i class="ri-menu-line"></i>
+            </button>
 
-        <div class="dash-card">
-            <h3>Welcome Back</h3>
-            <p id="userName">Loading...</p>
-        </div>
+            <h1 class="logo">
+                <img height="150px" src="media/ChatGPT Image Jun 5, 2026, 03_46_39 AM.png" alt="">
+            </h1>
 
-        <div class="dash-card">
-            <h3>Portfolio Value</h3>
-            <h1>$12,450.00</h1>
-        </div>
+            <button class="profile-btn" aria-label="Profile">
+                <i class="ri-user-3-line"></i>
+            </button>
 
-        <div class="dash-card">
-            <h3>Market Status</h3>
-            <p>Live • Active • Updated</p>
-        </div>
+        </header>
 
-    </main>
+        <!-- Main Content -->
+        <main class="dashboard-main">
 
-    <script src="landing.js"></script>
+            <!-- Welcome Card -->
+            <section class="welcome-card">
+
+                <div class="welcome-content">
+
+                    <span class="welcome-tag">
+                        Welcome Back
+                    </span>
+
+                    <h2 class="welcome-title">
+                        Hello,
+                        <span id="userName">
+                            User
+                        </span>
+                    </h2>
+
+                    <p class="welcome-text">
+                        Manage your assets and track your financial activity.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <!-- Balance Card -->
+            <section class="balance-card">
+
+                <p class="balance-label">
+                    Total Balance
+                </p>
+
+                <h2 class="balance-amount">
+                    $0.00
+                </h2>
+
+                <button class="deposit-btn">
+                    Deposit Funds
+                </button>
+
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="actions-section">
+
+                <h3 class="section-title">
+                    Quick Actions
+                </h3>
+
+                <div class="actions-grid">
+
+                    <button class="action-card">
+                        <i class="ri-bank-card-line"></i>
+                        <span>Deposit</span>
+                    </button>
+
+                    <button class="action-card">
+                        <i class="ri-wallet-3-line"></i>
+                        <span>Withdraw</span>
+                    </button>
+
+                    <button class="action-card">
+                        <i class="ri-exchange-dollar-line"></i>
+                        <span>Buy</span>
+                    </button>
+
+                    <button class="action-card">
+                        <i class="ri-line-chart-line"></i>
+                        <span>Sell</span>
+                    </button>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
 </body>
 </html>
