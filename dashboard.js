@@ -1,89 +1,54 @@
-// Get logged-in user
-const currentUser = JSON.parse(
-    localStorage.getItem('currentUser')
-);
+document.addEventListener("DOMContentLoaded", () => {
 
-// Protect dashboard
-if (!currentUser) {
-    window.location.href = 'signin.html';
-}
+    // =========================
+    // ELEMENTS
+    // =========================
+    const openBtn = document.getElementById("openSidebar");
+    const closeBtn = document.getElementById("closeSidebar");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-// Display user information
-const userName = document.getElementById('userName');
-const fullName = document.getElementById('fullName');
-const userEmail = document.getElementById('userEmail');
-const userBalance = document.getElementById('userBalance');
+    // =========================
+    // FUNCTIONS
+    // =========================
+    function openSidebar() {
+        if (sidebar) sidebar.classList.add("show");
+        if (overlay) overlay.classList.add("show");
+    }
 
-if (userName) {
-    userName.textContent = currentUser.firstName;
-}
+    function closeSidebar() {
+        if (sidebar) sidebar.classList.remove("show");
+        if (overlay) overlay.classList.remove("show");
+    }
 
-if (fullName) {
-    fullName.textContent =
-        `${currentUser.firstName} ${currentUser.lastName}`;
-}
+    // =========================
+    // SIDEBAR EVENTS
+    // =========================
+    if (openBtn) {
+        openBtn.addEventListener("click", openSidebar);
+    }
 
-if (userEmail) {
-    userEmail.textContent = currentUser.email;
-}
+    if (closeBtn) {
+        closeBtn.addEventListener("click", closeSidebar);
+    }
 
-// Default balance for new users
-if (userBalance) {
-    userBalance.textContent = '$0.00';
-}
+    if (overlay) {
+        overlay.addEventListener("click", closeSidebar);
+    }
 
-// Logout
-const logoutBtn = document.getElementById('logoutBtn');
+    // =========================
+    // LOGOUT
+    // =========================
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
 
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
+            // Clear user session
+            localStorage.removeItem("currentUser");
 
-        localStorage.removeItem('currentUser');
+            // Redirect to login page
+            window.location.href = "signup.html";
+        });
+    }
 
-        window.location.href = 'signin.html';
-    });
-}
-const menuBtn = document.getElementById('menuBtn');
-const closeBtn = document.getElementById('closeBtn');
-const sidebar = document.getElementById('sidebar');
-const overlay = document.getElementById('overlay');
-
-menuBtn.addEventListener('click', () => {
-    sidebar.classList.add('active');
-    overlay.classList.add('active');
-});
-
-closeBtn.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-});
-
-overlay.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-});
-
-const currentUser = JSON.parse(
-    localStorage.getItem('currentUser')
-);
-
-if (!currentUser) {
-    window.location.href = 'signin.html';
-}
-
-document.getElementById('userName').textContent =
-    currentUser.firstName + ' ' + currentUser.lastName;
-
-document.getElementById('userEmail').textContent =
-    currentUser.email;
-
-const logoutBtn = document.getElementById('logoutBtn');
-
-logoutBtn.addEventListener('click', (e) => {
-
-    e.preventDefault();
-
-    localStorage.removeItem('currentUser');
-
-    window.location.href = 'signin.html';
 });
