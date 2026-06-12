@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.removeItem("currentUser");
 
             // Redirect to login page
-            window.location.href = "signup.html";
+            window.location.href = "signin.html";
         });
     }
 

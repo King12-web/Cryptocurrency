@@ -25,7 +25,7 @@
     <div class="sidebar-top">
 
         <h2 class="sidebar-logo">
-            <!-- <img height="100px" src="media/ChatGPT Image Jun 5, 2026, 03_46_39 AM.png" alt=""> -->
+            <img height="100px" src="media/ChatGPT Image Jun 5, 2026, 03_46_39 AM.png" alt="">
         </h2>
 
         <button class="sidebar-close" id="closeSidebar">
@@ -110,13 +110,7 @@
                         Welcome Back
                     </span>
 
-                    <h2 class="welcome-title">
-                        Hello,
-                        <span id="userName">
-                            User
-                        </span>
-                    </h2>
-
+                    <h1 id="welcome-name"></h1>
                     <p class="welcome-text">
                         Manage your assets and track your financial activity.
                     </p>
@@ -177,8 +171,18 @@
 
         </main>
 
-    </div>
 
     <script src="dashboard.js"></script>
+    <script>
+  // Get the logged-in user
+  const user = JSON.parse(sessionStorage.getItem('nv_session'));
+
+  // If no one is logged in, send them back to sign in
+  if(!user) {
+    window.location.href = 'signin.html';
+  }
+  // Display their details
+  document.getElementById('welcome-name').textContent = user.firstName + '!';
+  </script>
 </body>
 </html>

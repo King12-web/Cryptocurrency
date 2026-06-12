@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NexVault – Sign In</title>
+  <title>MoonVault – Sign In</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -59,7 +59,7 @@
         <path d="M10 2v12M3 6l7 4 7-4" stroke="#07090E" stroke-width="1.6"/>
       </svg>
     </div>
-    <span class="logo-text">NEXVAULT</span>
+    <span class="logo-text">MOONVAULT</span>
   </div>
   <div class="card">
     <div class="card-head">
@@ -133,7 +133,7 @@
         email: u.email, dob: u.dob, sex: u.sex, country: u.country, balance: u.balance||0,
       }));
 
-      toast('✓ Access granted. Redirecting…','ok');
+      toast('✓ Access granted','ok');
       setTimeout(()=>{ window.location.href='dashboard.html'; }, 1500);
 
     } catch(err){
